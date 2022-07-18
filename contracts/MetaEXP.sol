@@ -669,7 +669,7 @@ contract MetaEXP is Context, IERC20, Ownable {
     address[] private _excluded;
 
     uint256 private constant MAX = ~uint256(0);
-    uint256 private _tTotal = 337600000000 * 10 ** 10;
+    uint256 private _tTotal = 337600000000 * 10**10;
     uint256 private _rTotal = (MAX - (MAX % _tTotal));
     uint256 private _tFeeTotal;
 
@@ -686,10 +686,7 @@ contract MetaEXP is Context, IERC20, Ownable {
     uint256 public _devFee = 1;
     uint256 private _previousDevFee = _devFee;
 
-    address public burnWallet = 0x6fD5D6C24eA2595A6b702CffcF3d4d97989e2834;
-    address public mktWallet = 0x6fD5D6C24eA2595A6b702CffcF3d4d97989e2834;
     address public devWallet = 0x6fD5D6C24eA2595A6b702CffcF3d4d97989e2834;
-    address public holdersWallet = 0x6fD5D6C24eA2595A6b702CffcF3d4d97989e2834;
     address manager = 0x6fD5D6C24eA2595A6b702CffcF3d4d97989e2834;
 
     IUniswapV2Router02 public uniswapV2Router;
@@ -730,8 +727,6 @@ contract MetaEXP is Context, IERC20, Ownable {
 
         //exclude owner and this contract from fee
         _isExcludedFromFee[manager] = true;
-        _isExcludedFromFee[burnWallet] = true;
-        _isExcludedFromFee[mktWallet] = true;
         _isExcludedFromFee[devWallet] = true;
         _isExcludedFromFee[address(this)] = true;
 
@@ -1046,15 +1041,12 @@ contract MetaEXP is Context, IERC20, Ownable {
     }
 
     function removeAllFee() private {
-        if (
-            _taxFee == 0 &&
-            _liquidityFee == 0 &&
-            _devFee == 0 &&
-        ) return;
+        if (_taxFee == 0 && _liquidityFee == 0 && _devFee == 0) {
+            return;
+        }
 
         _previousTaxFee = _taxFee;
         _previousLiquidityFee = _liquidityFee;
-
 
         _previousDevFee = _devFee;
 
@@ -1172,7 +1164,7 @@ contract MetaEXP is Context, IERC20, Ownable {
 
         _liquidityFee = 0;
         _taxFee = 0;
-        _transferStandard(sender, mktWallet, mktAmt);
+        _transferStandard(sender, devWallet, devAmt);
 
         // //Restore tax and liquidity fees
         _taxFee = _previousTaxFee;
@@ -1262,8 +1254,6 @@ contract MetaEXP is Context, IERC20, Ownable {
         inSwapAndLiquify = false;
         emit SwapAndLiquifyEnabledUpdated(false);
     }
-
-
 
     // function setDevFeePercent(uint256 fee) external onlyOwner {
     //     _devFee = fee;
