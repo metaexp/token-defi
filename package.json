@@ -14,5 +14,17 @@
   "devDependencies": {
     "@nomiclabs/buidler": "^1.4.8",
     "ethereumjs-tx": "^2.1.2"
+  },
+  "scripts": {
+    "test": "truffle test ./test/*",
+    "start-blank": "rm -rf client/src && cp -rf barebones/src client/",
+    "client": "cd client && npm run start",
+    "console": "truffle console --network local",
+    "migrate:local": "truffle migrate --reset --network local",
+    "migrate:ropsten": "truffle migrate --reset --network ropsten",
+    "size": "truffle run contract-size",
+    "build": "truffle build && npm run size",
+    "deploy-test": "truffle deploy --network development_test",
+    "deploy": " rm -rf build && truffle deploy --network testnet"
   }
 }

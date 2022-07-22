@@ -1,34 +1,67 @@
-const HDWalletProvider = require("@truffle/hdwallet-provider");
-const fs = require("fs");
-const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require('@truffle/hdwallet-provider')
+const fs = require('fs')
+const mnemonic = fs.readFileSync('.secret').toString().trim()
 
 module.exports = {
+  plugins: [
+    'truffle-contract-size'
+  ],
   networks: {
     development: {
-      host: "127.0.0.1", // Localhost (default: none)
-      port: 8545, // Standard BSC port (default: none)
-      network_id: "*", // Any network (default: none)
+      host: '127.0.0.1', // Localhost (default: none)
+      port: 7545, // Standard BSC port (default: none)
+      network_id: '*', // Any network (default: none)
+    },
+    development_test: {
+      host: '127.0.0.1', // Localhost (default: none)
+      port: 7545, // Standard BSC port (default: none)
+      network_id: '*', // Any network (default: none)
     },
     testnet: {
       provider: () =>
         new HDWalletProvider(
           mnemonic,
-          `https://data-seed-prebsc-1-s1.binance.org:8545`
+          `https://data-seed-prebsc-1-s1.binance.org:8545`,
         ),
       network_id: 97,
-      confirmations: 4,
-      timeoutBlocks: 200000,
+      confirmations: 1,
+      timeoutBlocks: 2000000,
       skipDryRun: true,
-      timeoutBlocks: 200000,
-      networkCheckTimeout: 90000
+      networkCheckTimeout: 1000000,
+      disableConfirmationListener: true,
+    },
+    testnet_mubai: {
+      provider: () =>
+        new HDWalletProvider(
+          mnemonic,
+          `https://polygon-mumbai.g.alchemy.com/v2/wzJWxdXWNMUEB8uOtimnWsoiDXI4t6Su`,
+        ),
+      network_id: 80001,
+      confirmations: 1,
+      timeoutBlocks: 20000,
+      skipDryRun: true,
+      networkCheckTimeout: 10000000,
+      disableConfirmationListener: true,
     },
     bsc: {
       provider: () =>
-        new HDWalletProvider(mnemonic, `https://bsc-dataseed1.binance.org`),
-      network_id: 56,
-      confirmations: 3,
+        new HDWalletProvider(
+          mnemonic,
+          `https://data-seed-prebsc-1-s1.binance.org:8545`,
+        ),
+      network_id: 97,
+      confirmations: 1,
       timeoutBlocks: 200,
       skipDryRun: true,
+    },
+    coinex_testnet: {
+      provider: () =>
+        new HDWalletProvider(mnemonic, `https://testnet-rpc.coinex.net`),
+      network_id: 53,
+      confirmations: 2,
+      timeoutBlocks: 2000,
+      skipDryRun: true,
+      networkCheckTimeout: 1000000,
     },
   },
 
@@ -40,8 +73,13 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "^0.6.12", // A version or constraint - Ex. "^0.6.12"
+        version: "^0.6.12",  // A version or constraint - Ex. "^0.8.0"
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 200,
+        },
+      },
     },
   },
-};
-
+}
