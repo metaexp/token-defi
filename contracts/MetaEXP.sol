@@ -680,10 +680,10 @@ contract MetaEXP is Context, IERC20, Ownable {
     uint256 public _taxFee = 0;
     uint256 private _previousTaxFee = _taxFee;
 
-    uint256 public _liquidityFee = 2;
+    uint256 public _liquidityFee = 0;
     uint256 private _previousLiquidityFee = _liquidityFee;
 
-    uint256 public _devFee = 1;
+    uint256 public _devFee = 2;
     uint256 private _previousDevFee = _devFee;
 
     address public devWallet = 0x6fD5D6C24eA2595A6b702CffcF3d4d97989e2834;
@@ -711,19 +711,20 @@ contract MetaEXP is Context, IERC20, Ownable {
         inSwapAndLiquify = false;
     }
 
-    constructor(address router_uniswap) public {
-        transferOwnership(manager);
+    constructor(address router_uniswap, address _devWallet) public {
+        manager = msg.sender;
+        devWallet = _devWallet;
         _rOwned[manager] = _rTotal;
 
-        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(
-            router_uniswap
-        );
-        // Create a uniswap pair for this new token
-        uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory())
-            .createPair(address(this), _uniswapV2Router.WETH());
+        // IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(
+        //     router_uniswap
+        // );
+        // // Create a uniswap pair for this new token
+        // uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory())
+        //     .createPair(address(this), _uniswapV2Router.WETH());
 
-        // set the rest of the contract variables
-        uniswapV2Router = _uniswapV2Router;
+        // // set the rest of the contract variables
+        // uniswapV2Router = _uniswapV2Router;
 
         //exclude owner and this contract from fee
         _isExcludedFromFee[manager] = true;
@@ -1148,8 +1149,7 @@ contract MetaEXP is Context, IERC20, Ownable {
 
         //Calculate all fee amount and charity amount
         uint256 devAmt = amount.mul(_devFee).div(100);
-        uint256 totalFee = devAmt;
-        uint256 total = amount.sub(totalFee);
+        uint256 total = amount.sub(devAmt);
         if (_isExcluded[sender] && !_isExcluded[recipient]) {
             _transferFromExcluded(sender, recipient, total);
         } else if (!_isExcluded[sender] && _isExcluded[recipient]) {
@@ -1161,13 +1161,12 @@ contract MetaEXP is Context, IERC20, Ownable {
         } else {
             _transferStandard(sender, recipient, total);
         }
-
-        _liquidityFee = 0;
+         _liquidityFee = 0;
         _taxFee = 0;
+
         _transferStandard(sender, devWallet, devAmt);
 
-        // //Restore tax and liquidity fees
-        _taxFee = _previousTaxFee;
+         _taxFee = _previousTaxFee;
         _liquidityFee = _previousLiquidityFee;
 
         if (_isExcludedFromFee[sender] || _isExcludedFromFee[recipient])
