@@ -674,7 +674,7 @@ contract MetaEXP is Context, IERC20, Ownable {
     uint256 private _tFeeTotal;
 
     string private _name = "MetaEXP";
-    string private _symbol = "METAXP";
+    string private _symbol = "MXP";
     uint8 private _decimals = 10;
 
     uint256 public _taxFee = 0;
@@ -694,8 +694,6 @@ contract MetaEXP is Context, IERC20, Ownable {
 
     bool inSwapAndLiquify;
     bool public swapAndLiquifyEnabled = false;
-
-    uint256 private numTokensSellToAddToLiquidity = 2 * 10**6 * 10**9;
 
     event MinTokensBeforeSwapUpdated(uint256 minTokensBeforeSwap);
     event SwapAndLiquifyEnabledUpdated(bool enabled);
