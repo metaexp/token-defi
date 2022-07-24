@@ -3,9 +3,7 @@ const fs = require('fs')
 const mnemonic = fs.readFileSync('.secret').toString().trim()
 
 module.exports = {
-  plugins: [
-    'truffle-contract-size'
-  ],
+  plugins: ['truffle-contract-size'],
   networks: {
     development: {
       host: '127.0.0.1', // Localhost (default: none)
@@ -43,6 +41,14 @@ module.exports = {
       networkCheckTimeout: 10000000,
       disableConfirmationListener: true,
     },
+    polygon: {
+      provider: () => new HDWalletProvider(mnemonic, `https://polygon-rpc.com`),
+      network_id: 137,
+      confirmations: 1,
+      timeoutBlocks: 20000,
+      networkCheckTimeout: 10000000,
+      gasPrice: 380000000000,
+    },
     bsc: {
       provider: () =>
         new HDWalletProvider(
@@ -73,12 +79,13 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-        version: "^0.6.12",  // A version or constraint - Ex. "^0.8.0"
+      version: '0.8.14', // A version or constraint - Ex. "^0.8.0"
       settings: {
         optimizer: {
           enabled: true,
           runs: 200,
         },
+        evmVersion: 'byzantium',
       },
     },
   },
