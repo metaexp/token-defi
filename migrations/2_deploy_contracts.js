@@ -8,7 +8,7 @@ async function estimateGas(contract, ...params) {
 module.exports = async (deployer, network, accounts) => {
   await deployer.deploy(
     MetaEXP,
-    '0xD99D1c33F9fC3444f8101754aBC46c52416550D1',
     accounts[7],
+    accounts[8]
   )
 }
